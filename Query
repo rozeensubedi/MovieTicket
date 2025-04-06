@@ -1,1 +1,69 @@
+CREATE DATABASE MovieHallDB;
 
+USE MovieHallDB;
+
+CREATE TABLE Movies (
+    MovieID INT AUTO_INCREMENT PRIMARY KEY,
+    Title VARCHAR(255) NOT NULL,
+    Genre VARCHAR(100),
+    Duration INT,  -- Duration in minutes
+    ReleaseYear INT,
+    Rating FLOAT
+);
+
+CREATE TABLE Halls (
+    HallID INT AUTO_INCREMENT PRIMARY KEY,
+    HallName VARCHAR(100) NOT NULL,
+    TotalSeats INT
+);
+
+CREATE TABLE Screenings (
+    ScreeningID INT AUTO_INCREMENT PRIMARY KEY,
+    MovieID INT,
+    HallID INT,
+    ScreeningTime DATETIME,
+    FOREIGN KEY (MovieID) REFERENCES Movies(MovieID),
+    FOREIGN KEY (HallID) REFERENCES Halls(HallID)
+);
+
+CREATE TABLE Customers (
+    CustomerID INT AUTO_INCREMENT PRIMARY KEY,
+    FirstName VARCHAR(100),
+    LastName VARCHAR(100),
+    Email VARCHAR(255) UNIQUE,
+    PhoneNumber VARCHAR(20)
+);
+
+CREATE TABLE Bookings (
+    BookingID INT AUTO_INCREMENT PRIMARY KEY,
+    CustomerID INT,
+    ScreeningID INT,
+    SeatsBooked INT,
+    BookingTime DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID),
+    FOREIGN KEY (ScreeningID) REFERENCES Screenings(ScreeningID)
+);
+
+INSERT INTO Movies (Title, Genre, Duration, ReleaseYear, Rating)
+VALUES ('Avatar 2', 'Science Fiction', 150, 2022, 8.0),
+       ('The Batman', 'Action', 155, 2022, 7.9),
+       ('Spider-Man: No Way Home', 'Action', 148, 2021, 8.4);
+       
+       
+INSERT INTO Halls (HallName, TotalSeats)
+VALUES ('Hall 1', 100),
+       ('Hall 2', 150),
+       ('Hall 3', 200);
+       
+       
+       INSERT INTO Screenings (MovieID, HallID, ScreeningTime)
+VALUES (1, 1, '2025-04-10 18:30:00'),  -- Avatar 2 showing in Hall 1
+       (2, 2, '2025-04-11 20:00:00');  -- The Batman showing in Hall 2
+       
+       INSERT INTO Customers (FirstName, LastName, Email, PhoneNumber)
+VALUES ('Ram', 'Nath', 'ram.nath@example.com', '123-456-7890');
+
+
+       
+       INSERT INTO Bookings (CustomerID, ScreeningID, SeatsBooked)
+VALUES (1, 1, 2);  -- Ram Nath booked 2 seats for Avatar 2
